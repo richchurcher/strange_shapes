@@ -11,8 +11,7 @@ pub(super) fn plugin(app: &mut App) {
             apply_interaction_palette,
             trigger_interaction_sound_effect,
         )
-            .run_if(not(in_state(Screen::Loading)))
-            .run_if(not(in_state(Screen::Splash))),
+            .run_if(in_state(Screen::Title).or_else(in_state(Screen::Credits))),
     );
 }
 

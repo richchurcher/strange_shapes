@@ -1,16 +1,7 @@
-//! Player sprite animation.
-//! This is based on multiple examples and may be very different for your game.
-//! - [Sprite flipping](https://github.com/bevyengine/bevy/blob/latest/examples/2d/sprite_flipping.rs)
-//! - [Sprite animation](https://github.com/bevyengine/bevy/blob/latest/examples/2d/sprite_animation.rs)
-//! - [Timers](https://github.com/bevyengine/bevy/blob/latest/examples/time/timers.rs)
-
 use bevy::prelude::*;
-use rand::prelude::*;
 use std::time::Duration;
 
-use crate::{
-    asset_tracking::AudioAssets, audio::SoundEffect, demo::movement::MovementController, AppSet,
-};
+use crate::{game::movement::MovementController, AppSet};
 
 pub(super) fn plugin(app: &mut App) {
     // Animate and play sound effects based on controls.
@@ -19,13 +10,9 @@ pub(super) fn plugin(app: &mut App) {
         Update,
         (
             update_animation_timer.in_set(AppSet::TickTimers),
-            (
-                update_animation_movement,
-                update_animation_atlas,
-                trigger_step_sound_effect,
-            )
+            (update_animation_movement, update_animation_atlas)
                 .chain()
-                .in_set(AppSet::GameplayUpdate),
+                .in_set(AppSet::PlayingUpdate),
         ),
     );
 }
@@ -61,38 +48,6 @@ fn update_animation_atlas(mut query: Query<(&PlayerAnimation, &mut TextureAtlas)
     for (animation, mut atlas) in &mut query {
         if animation.changed() {
             atlas.index = animation.get_atlas_index();
-        }
-    }
-}
-
-/// If the player is moving, play a step sound effect synchronized with the
-/// animation.
-fn trigger_step_sound_effect(
-    mut commands: Commands,
-    audio_assets: Res<AudioAssets>,
-    mut step_query: Query<&PlayerAnimation>,
-) {
-    for animation in &mut step_query {
-        if animation.state == PlayerAnimationState::Walking
-            && animation.changed()
-            && (animation.frame == 2 || animation.frame == 5)
-        {
-            let rng = &mut rand::thread_rng();
-            let steps = vec![
-                audio_assets.path_step_1.clone(),
-                audio_assets.path_step_2.clone(),
-                audio_assets.path_step_3.clone(),
-                audio_assets.path_step_4.clone(),
-            ];
-            if let Some(random_step) = steps.choose(rng) {
-                commands.spawn((
-                    AudioBundle {
-                        source: random_step.clone(),
-                        settings: PlaybackSettings::DESPAWN,
-                    },
-                    SoundEffect,
-                ));
-            }
         }
     }
 }

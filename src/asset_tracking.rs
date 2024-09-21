@@ -19,24 +19,6 @@ pub struct AudioAssets {
 
     #[asset(path = "audio/sound_effects/button_press.ogg")]
     pub button_press: Handle<AudioSource>,
-
-    #[asset(path = "audio/music/Fluffing A Duck.ogg")]
-    pub fluffing_a_duck: Handle<AudioSource>,
-
-    #[asset(path = "audio/music/Monkeys Spinning Monkeys.ogg")]
-    pub monkeys_spinning_monkeys: Handle<AudioSource>,
-
-    #[asset(path = "audio/sound_effects/step1.ogg")]
-    pub path_step_1: Handle<AudioSource>,
-
-    #[asset(path = "audio/sound_effects/step2.ogg")]
-    pub path_step_2: Handle<AudioSource>,
-
-    #[asset(path = "audio/sound_effects/step3.ogg")]
-    pub path_step_3: Handle<AudioSource>,
-
-    #[asset(path = "audio/sound_effects/step4.ogg")]
-    pub path_step_4: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]

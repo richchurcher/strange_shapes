@@ -1,8 +1,8 @@
 mod asset_tracking;
 pub mod audio;
-mod demo;
 #[cfg(feature = "dev")]
 mod dev_tools;
+mod game;
 mod screens;
 mod theme;
 
@@ -21,15 +21,11 @@ impl Plugin for AppPlugin {
         app.configure_sets(Update, (AppSet::TickTimers, AppSet::Update).chain());
         app.configure_sets(
             Update,
-            (AppSet::RecordInput, AppSet::GameplayUpdate)
+            (AppSet::RecordInput, AppSet::PlayingUpdate)
                 .chain()
-                .run_if(in_state(Screen::Gameplay)),
+                .run_if(in_state(Screen::Playing)),
         );
 
-        // Spawn the main camera.
-        app.add_systems(Startup, spawn_camera);
-
-        // Add Bevy plugins.
         app.add_plugins(
             DefaultPlugins
                 .set(AssetPlugin {
@@ -45,6 +41,7 @@ impl Plugin for AppPlugin {
                         canvas: Some("#bevy".to_string()),
                         fit_canvas_to_parent: true,
                         prevent_default_event_handling: true,
+                        resizable: false,
                         ..default()
                     }
                     .into(),
@@ -58,45 +55,22 @@ impl Plugin for AppPlugin {
                 }),
         );
 
-        // Add other plugins.
         app.add_plugins((
             asset_tracking::plugin,
-            demo::plugin,
+            game::plugin,
             screens::plugin,
             theme::plugin,
         ));
 
-        // Enable dev tools for dev builds.
         #[cfg(feature = "dev")]
         app.add_plugins(dev_tools::plugin);
     }
 }
 
-/// High-level groupings of systems for the app in the `Update` schedule.
-/// When adding a new variant, make sure to order it in the `configure_sets`
-/// call above.
 #[derive(SystemSet, Debug, Clone, Copy, Eq, PartialEq, Hash, PartialOrd, Ord)]
 enum AppSet {
-    /// Tick timers.
     TickTimers,
-    /// Record player input.
     RecordInput,
-    /// Do everything else (consider splitting this into further variants).
     Update,
-    /// Updates only during gameplay (when resources etc. should already exist)
-    GameplayUpdate,
-}
-
-fn spawn_camera(mut commands: Commands) {
-    commands.spawn((
-        Name::new("Camera"),
-        Camera2dBundle::default(),
-        // Render all UI to this camera.
-        // Not strictly necessary since we only use one camera,
-        // but if we don't use this component, our UI will disappear as soon
-        // as we add another camera. This includes indirect ways of adding cameras like using
-        // [ui node outlines](https://bevyengine.org/news/bevy-0-14/#ui-node-outline-gizmos)
-        // for debugging. So it's good to have this here for future-proofing.
-        IsDefaultUiCamera,
-    ));
+    PlayingUpdate,
 }

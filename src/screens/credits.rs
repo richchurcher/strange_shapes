@@ -33,14 +33,14 @@ fn enter_title_screen(_trigger: Trigger<OnPress>, mut next_screen: ResMut<NextSt
     next_screen.set(Screen::Title);
 }
 
-fn play_credits_music(mut commands: Commands, audio_assets: Res<AudioAssets>) {
-    commands.spawn((
-        AudioBundle {
-            source: audio_assets.monkeys_spinning_monkeys.clone(),
-            settings: PlaybackSettings::LOOP,
-        },
-        Music,
-    ));
+fn play_credits_music(_commands: Commands, _audio_assets: Res<AudioAssets>) {
+    // commands.spawn((
+    //     AudioBundle {
+    //         source: audio_assets.monkeys_spinning_monkeys.clone(),
+    //         settings: PlaybackSettings::LOOP,
+    //     },
+    //     Music,
+    // ));
 }
 
 fn stop_music(mut commands: Commands, music: Query<Entity, With<Music>>) {
