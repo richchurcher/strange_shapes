@@ -8,7 +8,8 @@ pub(super) fn plugin(app: &mut App) {
         LoadingState::new(Screen::Loading)
             .continue_to_state(Screen::Title)
             .load_collection::<AudioAssets>()
-            .load_collection::<ImageAssets>(),
+            .load_collection::<ImageAssets>()
+            .load_collection::<SceneAssets>(),
     );
 }
 
@@ -19,6 +20,12 @@ pub struct AudioAssets {
 
     #[asset(path = "audio/sound_effects/button_press.ogg")]
     pub button_press: Handle<AudioSource>,
+}
+
+#[derive(AssetCollection, Resource)]
+pub struct SceneAssets {
+    #[asset(path = "models/ship.glb#Scene0")]
+    pub ship: Handle<Scene>,
 }
 
 #[derive(AssetCollection, Resource)]
