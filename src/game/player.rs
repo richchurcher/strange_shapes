@@ -8,14 +8,14 @@ pub(super) fn plugin(app: &mut App) {
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Default, Reflect)]
 #[reflect(Component)]
-pub struct Ship;
+pub struct Player;
 
 fn init(mut commands: Commands, scene_assets: Res<SceneAssets>) {
     commands.spawn((
-        Name::new("Ship"),
-        Ship,
+        Name::new("Player"),
+        Player,
         SceneBundle {
-            scene: scene_assets.ship.clone(),
+            scene: scene_assets.player.clone(),
             transform: Transform::from_translation(Vec3::ZERO),
             ..default()
         },

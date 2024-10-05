@@ -2,7 +2,7 @@
 #![cfg_attr(not(feature = "dev"), windows_subsystem = "windows")]
 
 use bevy::prelude::*;
-use unnamed_space_traffic_control_game::AppPlugin;
+use strange_shapes::AppPlugin;
 
 fn main() -> AppExit {
     App::new().add_plugins(AppPlugin).run()

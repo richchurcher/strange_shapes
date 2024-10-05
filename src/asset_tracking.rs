@@ -8,7 +8,6 @@ pub(super) fn plugin(app: &mut App) {
         LoadingState::new(Screen::Loading)
             .continue_to_state(Screen::Title)
             .load_collection::<AudioAssets>()
-            .load_collection::<ImageAssets>()
             .load_collection::<SceneAssets>(),
     );
 }
@@ -24,12 +23,6 @@ pub struct AudioAssets {
 
 #[derive(AssetCollection, Resource)]
 pub struct SceneAssets {
-    #[asset(path = "models/ship.glb#Scene0")]
-    pub ship: Handle<Scene>,
-}
-
-#[derive(AssetCollection, Resource)]
-pub struct ImageAssets {
-    #[asset(path = "images/ducky.png")]
-    pub ducky: Handle<Image>,
+    #[asset(path = "models/player.glb#Scene0")]
+    pub player: Handle<Scene>,
 }

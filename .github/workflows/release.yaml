@@ -14,10 +14,10 @@ on:
 
 env:
   assets_path: assets
-  cargo_build_binary_name: unnamed-space-traffic-control-game
+  cargo_build_binary_name: strange-shapes
   git_lfs: false
   upload_to_github: true
-  upload_to_itch: eloquentgeek/unnamed-space-traffic-control-game
+  upload_to_itch: eloquentgeek/strange-shapes
 jobs:
   get-version:
     runs-on: ubuntu-latest
