@@ -74,6 +74,7 @@ jobs:
           echo "app_short_name=${app_short_name:=${app_display_name}}" >> "${GITHUB_ENV}"
 
           # File paths:
+          echo "app=tmp/app/${app_package_name}" >> "${GITHUB_ENV}"
           echo "package=${app_package_name}-"'${{ matrix.platform }}${{ matrix.package_ext }}' >> "${GITHUB_ENV}"
 
           # macOS environment:
@@ -94,6 +95,8 @@ jobs:
 
       - name: Populate cargo cache
         uses: Leafwing-Studios/cargo-cache@v2
+        with:
+          sweep-cache: true
 
       - name: Install dependencies (Linux)
         if: ${{ matrix.platform == 'linux' }}
