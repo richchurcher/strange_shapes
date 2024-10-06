@@ -14,7 +14,7 @@ on:
 
 env:
   assets_path: assets
-  cargo_build_binary_name: strange-shapes
+  cargo_build_binary_name: strange_shapes
   git_lfs: false
   upload_to_github: true
   upload_to_itch: eloquentgeek/strange-shapes
