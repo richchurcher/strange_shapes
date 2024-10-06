@@ -15,7 +15,7 @@ tracing = { version = "0.1", features = [
     "max_level_debug",
     "release_max_level_warn",
 ] }
-leafwing-input-manager = "0.15.0"
+leafwing-input-manager = { git = "https://github.com/leafwing-studios/leafwing-input-manager" }
 bevy_asset_loader = "0.21.0"
 
 [features]
