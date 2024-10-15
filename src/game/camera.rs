@@ -2,7 +2,9 @@ use std::{f32::consts::FRAC_PI_2, ops::Range};
 
 use bevy::{input::mouse::MouseMotion, prelude::*};
 
-use crate::{game::movement::MovementController, screens::Screen, AppSet};
+use crate::{screens::Screen, AppSet};
+
+use super::player::Player;
 
 #[derive(Debug, Resource)]
 struct CameraSettings {
@@ -47,6 +49,10 @@ fn init(mut commands: Commands) {
     commands.spawn((
         Name::new("Point light"),
         PointLightBundle {
+            point_light: PointLight {
+                shadows_enabled: true,
+                ..default()
+            },
             transform: Transform::from_translation(Vec3::new(5.0, 5.0, 0.0)),
             ..default()
         },
@@ -54,40 +60,12 @@ fn init(mut commands: Commands) {
     ));
 }
 
-fn record_player_directional_input(
-    input: Res<ButtonInput<KeyCode>>,
-    mut controller_query: Query<&mut MovementController, With<Camera>>,
-) {
-    let mut intent = Vec2::ZERO;
-    if input.pressed(KeyCode::KeyW) || input.pressed(KeyCode::ArrowUp) {
-        intent.y += 1.0;
-    }
-    if input.pressed(KeyCode::KeyS) || input.pressed(KeyCode::ArrowDown) {
-        intent.y -= 1.0;
-    }
-    if input.pressed(KeyCode::KeyA) || input.pressed(KeyCode::ArrowLeft) {
-        intent.x -= 1.0;
-    }
-    if input.pressed(KeyCode::KeyD) || input.pressed(KeyCode::ArrowRight) {
-        intent.x += 1.0;
-    }
-
-    // Normalize so that diagonal movement has the same speed as
-    // horizontal and vertical movement.
-    // This should be omitted if the input comes from an analog stick instead.
-    let intent = intent.normalize_or_zero();
-
-    // Apply movement intent to controllers.
-    for mut controller in &mut controller_query {
-        controller.intent = intent;
-    }
-}
-
 fn orbit(
     mut camera: Query<&mut Transform, With<Camera>>,
     camera_settings: Res<CameraSettings>,
     mouse_buttons: Res<ButtonInput<MouseButton>>,
     mut mouse_motion: EventReader<MouseMotion>,
+    player: Query<&Transform, (With<Player>, Without<Camera>)>,
     time: Res<Time>,
 ) {
     let mut transform = camera.single_mut();
@@ -125,8 +103,9 @@ fn orbit(
     let yaw = yaw + delta_yaw;
     transform.rotation = Quat::from_euler(EulerRot::YXZ, yaw, pitch, roll);
 
-    // Adjust the translation to maintain the correct orientation toward the orbit target.
-    // In our example it's a static target, but this could easily be customised.
-    let target = Vec3::ZERO;
+    let mut target = Vec3::ZERO;
+    if let Ok(player_transform) = player.get_single() {
+        target = player_transform.translation;
+    }
     transform.translation = target - transform.forward() * camera_settings.orbit_distance;
 }
