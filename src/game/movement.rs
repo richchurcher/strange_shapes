@@ -2,6 +2,8 @@ use bevy::prelude::*;
 
 use crate::AppSet;
 
+use super::player::Player;
+
 pub(super) fn plugin(app: &mut App) {
     app.register_type::<MovementController>();
 
@@ -30,19 +32,27 @@ impl Default for MovementController {
     fn default() -> Self {
         Self {
             intent: Vec3::ZERO,
-            // 400 pixels per second is a nice default, but we can still vary this per character.
             max_speed: 10.0,
         }
     }
 }
 
 fn apply_movement(
-    mut movement_query: Query<(&MovementController, &mut Transform)>,
+    mut light: Query<&mut Transform, With<PointLight>>,
+    mut movement_query: Query<
+        (&MovementController, &mut Transform, Option<&Player>),
+        (With<MovementController>, Without<PointLight>),
+    >,
     time: Res<Time>,
 ) {
-    for (controller, mut transform) in &mut movement_query {
-        dbg!(controller.intent);
+    for (controller, mut transform, maybe_player) in &mut movement_query {
         let velocity = controller.max_speed * controller.intent;
         transform.translation += velocity * time.delta_seconds();
+        if maybe_player.is_some() {
+            let Ok(mut light_transform) = light.get_single_mut() else {
+                return;
+            };
+            light_transform.translation = transform.translation + Vec3::new(5.0, 5.0, 0.0);
+        }
     }
 }
