@@ -52,7 +52,11 @@ fn apply_movement(
             let Ok(mut light_transform) = light.get_single_mut() else {
                 return;
             };
-            light_transform.translation = transform.translation + Vec3::new(5.0, 5.0, 0.0);
+            let mut light_offset = controller.intent * 5.;
+            if light_offset == Vec3::ZERO {
+                light_offset = Vec3::new(5.0, 10.0, 5.0);
+            }
+            light_transform.translation = transform.translation + light_offset;
         }
     }
 }

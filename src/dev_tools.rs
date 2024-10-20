@@ -8,10 +8,13 @@ use bevy::{
     input::common_conditions::input_just_pressed,
     prelude::*,
 };
+use bevy_inspector_egui::{bevy_egui::EguiSettings, quick::WorldInspectorPlugin};
 
 use crate::screens::Screen;
 
 pub(super) fn plugin(app: &mut App) {
+    app.add_plugins(WorldInspectorPlugin::new());
+
     // Log `Screen` state transitions.
     app.add_systems(Update, log_transitions::<Screen>);
 

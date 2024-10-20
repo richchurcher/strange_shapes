@@ -61,7 +61,6 @@ fn orbit(
     mouse_buttons: Res<ButtonInput<MouseButton>>,
     mut mouse_motion: EventReader<MouseMotion>,
     player: Query<&Transform, (With<Player>, Without<Camera>)>,
-    time: Res<Time>,
 ) {
     let mut transform = camera.single_mut();
     let mut delta = Vec2::ZERO;
